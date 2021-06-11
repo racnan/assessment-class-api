@@ -5,32 +5,32 @@ const {
     pool
 } = require('../db_setup')
 
-const createTeacher = async (firstname, lastname, email, password) => {
+const createStudent = async (firstname, lastname, email, password) => {
 
     // hash the password before storing it
     password = await bcrypt.hash(password, 8)
 
     const id = await pool.query(
-        "INSERT INTO teacher (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING teacher_id",
+        "INSERT INTO student (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING student_id",
         [firstname, lastname, email, password])
 
     // generate the jwt token for authorization.
-    // also, assigns the role "teacher" to the token,
-    // so the user cannot access "student" resources
+    // also, assigns the role "student" to the token,
+    // so the user cannot access "teacher" resources
     // with this token
     const token = jwt.sign({
-        "id": id.rows[0].teacher_id.toString(),
-        "role": "teacher"
+        "id": id.rows[0].student_id.toString(),
+        "role": "student"
     }, "homejam-secret-key")
 
     return token
 
 }
 
-const signInTeacher = async (email, password) => {
+const signInStudent = async (email, password) => {
 
     const user = await pool.query(
-        "SELECT password,teacher_id FROM teacher WHERE email = $1",
+        "SELECT password,student_id FROM student WHERE email = $1",
         [email]
     )
 
@@ -51,29 +51,20 @@ const signInTeacher = async (email, password) => {
     }
 
     // generate the jwt token for authorization.
-    // also, assigns the role "teacher" to the token,
-    // so the user cannot access "student" resources
+    // also, assigns the role "student" to the token,
+    // so the user cannot access "teacher" resources
     // with this token
     const token = jwt.sign({
-        "id": user.rows[0].teacher_id.toString(),
-        "role": "teacher"
+        "id": user.rows[0].student_id.toString(),
+        "role": "student"
     }, "homejam-secret-key")
 
-    // if email and password matches successfullu
+    // if email and password matches successfully
     return token
 
 }
 
-const createClass = async (teacher_id, subject) => {
-
-    await pool.query(
-        "INSERT INTO class (fk_teacher_id, subject_name) VALUES ($1, $2)",
-        [teacher_id, subject])
-
-}
-
 module.exports = {
-    createTeacher,
-    signInTeacher,
-    createClass
+    createStudent,
+    signInStudent,
 }

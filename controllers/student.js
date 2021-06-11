@@ -1,21 +1,20 @@
 const express = require('express')
 
 const {
-    createTeacher,
-    signInTeacher,
-    createClass
-} = require('../services/teacher')
+    createStudent,
+    signInStudent,
+} = require('../services/student')
 
-const teacherAuth = require('../middleware/teacher_auth')
+const studentAuth = require('../middleware/student_auth')
 
 const router = new express.Router()
 
-router.post('/teacher/signup', async (req, res) => {
+router.post('/student/signup', async (req, res) => {
 
     try {
 
         // gets the jwt token after creating the user
-        const token = await createTeacher(
+        const token = await createStudent(
             req.body.firstname,
             req.body.lastname,
             req.body.email,
@@ -41,11 +40,11 @@ router.post('/teacher/signup', async (req, res) => {
     }
 })
 
-router.post('/teacher/signin', async (req, res) => {
+router.post('/student/signin', async (req, res) => {
 
     try {
 
-        const token = await signInTeacher(
+        const token = await signInStudent(
             req.body.email,
             req.body.password)
 
@@ -63,25 +62,6 @@ router.post('/teacher/signin', async (req, res) => {
         // for any other error
         console.log(e)
 
-        res.status(400).send()
-
-    }
-})
-
-router.post('/class/create', teacherAuth, async (req, res) => {
-
-    try {
-
-        // extract the teacher id passed by the teacher Auth middleware
-        const teacherID = res.locals.id
-        await createClass(teacherID, req.body.subject)
-
-        // when the class was created successfully 
-        res.status(201).send()
-
-    } catch (e) {
-        console.log(e)
-        // if any error
         res.status(400).send()
 
     }

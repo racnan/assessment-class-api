@@ -10,7 +10,7 @@
  */
 
 /* 
-    Refer to the readme to get visualized schema.
+    Refer the readme to get visualized schema.
  */
 
 CREATE TABLE IF NOT EXISTS teacher (
