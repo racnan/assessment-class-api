@@ -117,7 +117,7 @@ const getStudents = async (classID, teacherID) => {
     // to check if the class is associated with the teacher 
     const isClass = await pool.query(
         `SELECT * FROM class 
-        WHERE class_id = $1 AND fk_teacher_id = $2 `,
+        WHERE class_id = $1 AND fk_teacher_id = $2`,
         [classID, teacherID])
 
     // if no such class associated with the teacher is found
@@ -154,7 +154,7 @@ const removeStudent = async (classID, studentID, teacherID) => {
 
     const rowsAffected = await pool.query(
         `DELETE FROM class_student WHERE 
-        fk_class_id = $1 AND fk_student_id = $2)`,
+        fk_class_id = $1 AND fk_student_id = $2`,
         [classID, studentID])
 
     // if the student was not enrolled in that class

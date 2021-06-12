@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS teacher (
     password TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);
 
 CREATE TABLE IF NOT EXISTS student (
     student_id SERIAL PRIMARY KEY,
@@ -31,19 +31,19 @@ CREATE TABLE IF NOT EXISTS student (
     password TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);
 
 CREATE TABLE IF NOT EXISTS class (
     class_id SERIAL PRIMARY KEY,
     subject_name TEXT NOT NULL,
-    fk_teacher_id SERIAL REFERENCES teacher(teacher_id) ON DELETE SET NULL,
+    fk_teacher_id SERIAL REFERENCES teacher(teacher_id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);
 
 CREATE TABLE IF NOT EXISTS class_student (
-    class_student_id SERIAL PRIMARY KEY
+    class_student_id SERIAL PRIMARY KEY,
     fk_class_id SERIAL REFERENCES class(class_id) ON DELETE CASCADE,
     fk_student_id SERIAL REFERENCES student(student_id) ON DELETE CASCADE,
     joined_at TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);

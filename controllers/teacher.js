@@ -131,6 +131,8 @@ router.delete('/teacher/:classid', auth, async (req, res) => {
             return res.status(406).send()
         }
 
+        res.status(200).send()
+
     } catch (e) {
 
         console.log(e)
@@ -204,7 +206,7 @@ router.delete('/teacher/:classid/:studentid', auth, async (req, res) => {
     }
 })
 
-router.post("/teacher/:classid", async (req, res) => {
+router.get("/teacher/:classid", auth, async (req, res) => {
 
     try {
 
