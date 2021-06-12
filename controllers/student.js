@@ -3,9 +3,12 @@ const express = require('express')
 const {
     createStudent,
     signInStudent,
+    enroll,
+    getAllClasses,
+    leaveClass
 } = require('../services/student')
 
-const studentAuth = require('../middleware/student_auth')
+const auth = require('../middleware/auth')
 
 const router = new express.Router()
 
@@ -59,12 +62,92 @@ router.post('/student/signin', async (req, res) => {
 
     } catch (e) {
 
-        // for any other error
+        // for any error
         console.log(e)
 
         res.status(400).send()
 
     }
+})
+
+router.post('/student/enroll/:classid', auth, async (req, res) => {
+
+    try {
+
+        // take the class id from query params
+        const classID = req.params.classid
+
+        // extract the student id passed by the auth middleware
+        const studentID = res.locals.id
+
+        await enroll(classID, studentID)
+
+        // if no errors
+        res.status(201).send()
+
+    } catch (e) {
+
+        // for any error
+        console.log(e)
+
+        res.status(400).send()
+
+    }
+
+})
+
+router.get("/student/classes", auth, async (req, res) => {
+
+    try {
+
+        // extract the student id passed by the auth middleware
+        const studentID = res.locals.id
+
+        const details = await getAllClasses(studentID)
+
+        res.status(200).json(details)
+
+
+    } catch (e) {
+
+        // for any  error
+        console.log(e)
+
+        res.status(400).send()
+
+    }
+
+})
+
+router.delete("/student/:classid", auth, async (req, res) => {
+
+    try {
+
+        // take the class id from query params
+        const classID = req.params.classid
+
+        // extract the student id passed by the auth middleware
+        const studentID = res.locals.id
+
+        const rowsAffected = await leaveClass(classID, studentID)
+
+        if (rowsAffected === 0 ) {
+
+            // if user is not associated with this class
+            return res.status(406).send()
+        }
+
+        res.status(200).send()
+
+    } catch (e) {
+
+        // for any  error
+        console.log(e)
+
+        res.status(400).send()
+
+    }
+
 })
 
 module.exports = router

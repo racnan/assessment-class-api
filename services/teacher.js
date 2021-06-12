@@ -11,7 +11,8 @@ const createTeacher = async (firstname, lastname, email, password) => {
     password = await bcrypt.hash(password, 8)
 
     const id = await pool.query(
-        "INSERT INTO teacher (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING teacher_id",
+        `INSERT INTO teacher (first_name, last_name, email, password) 
+        VALUES ($1, $2, $3, $4) RETURNING teacher_id`,
         [firstname, lastname, email, password])
 
     // generate the jwt token for authorization.
@@ -30,7 +31,7 @@ const createTeacher = async (firstname, lastname, email, password) => {
 const signInTeacher = async (email, password) => {
 
     const user = await pool.query(
-        "SELECT password,teacher_id FROM teacher WHERE email = $1",
+        `SELECT password,teacher_id FROM teacher WHERE email = $1`,
         [email]
     )
 
@@ -67,13 +68,22 @@ const signInTeacher = async (email, password) => {
 const createClass = async (teacher_id, subject) => {
 
     await pool.query(
-        "INSERT INTO class (fk_teacher_id, subject_name) VALUES ($1, $2)",
+        `INSERT INTO class (fk_teacher_id, subject_name) VALUES ($1, $2)`,
         [teacher_id, subject])
 
 }
 
+const deleteClass = async (classID, teacherID) => {
+
+    const details = await pool.query(
+        `DELETE FROM class WHERE class_id = $1 AND fk_teacher_id = $2`,
+        [classID, teacherID])
+
+    return details.rowCount
+}
 module.exports = {
     createTeacher,
     signInTeacher,
-    createClass
+    createClass,
+    deleteClass
 }

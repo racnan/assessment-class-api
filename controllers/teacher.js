@@ -3,10 +3,11 @@ const express = require('express')
 const {
     createTeacher,
     signInTeacher,
-    createClass
+    createClass,
+    deleteClass
 } = require('../services/teacher')
 
-const teacherAuth = require('../middleware/teacher_auth')
+const auth = require('../middleware/auth')
 
 const router = new express.Router()
 
@@ -60,7 +61,7 @@ router.post('/teacher/signin', async (req, res) => {
 
     } catch (e) {
 
-        // for any other error
+        // for any error
         console.log(e)
 
         res.status(400).send()
@@ -68,12 +69,13 @@ router.post('/teacher/signin', async (req, res) => {
     }
 })
 
-router.post('/class/create', teacherAuth, async (req, res) => {
+router.post('/teacher/create', auth, async (req, res) => {
 
     try {
 
-        // extract the teacher id passed by the teacher Auth middleware
+        // extract the teacher id passed by the auth middleware
         const teacherID = res.locals.id
+
         await createClass(teacherID, req.body.subject)
 
         // when the class was created successfully 
@@ -85,6 +87,34 @@ router.post('/class/create', teacherAuth, async (req, res) => {
         res.status(400).send()
 
     }
+})
+
+router.delete('/teacher/:classid', auth, async (req, res) => {
+
+    try {
+        
+        // take the class id from query params
+        const classID = req.params.classid
+
+        // extract the teacher id passed by the auth middleware
+        const teacherID = res.locals.id
+
+        const rowsAffected = await deleteClass(classID, teacherID)
+
+        if (rowsAffected === 0){
+
+            // case when no such class was found for the teacher
+            return res.status(406).send()
+        }
+
+    } catch (e) {
+
+        console.log(e)
+        // if any error
+        res.status(400).send()
+
+    }
+
 })
 
 module.exports = router
