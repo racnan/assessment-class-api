@@ -66,6 +66,14 @@ const signInStudent = async (email, password) => {
 
 }
 
+const deleteAccount = async (studentID) => {
+
+    await pool.query(
+        `DELETE FROM student WHERE student_id = $1`,
+        [studentID])
+
+}
+
 const enroll = async (classID, studentID) => {
 
     await pool.query(
@@ -100,6 +108,7 @@ const getAllClasses = async (studentID) => {
 module.exports = {
     createStudent,
     signInStudent,
+    deleteAccount,
     enroll,
     leaveClass,
     getAllClasses

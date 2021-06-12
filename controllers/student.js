@@ -3,6 +3,7 @@ const express = require('express')
 const {
     createStudent,
     signInStudent,
+    deleteAccount,
     enroll,
     getAllClasses,
     leaveClass
@@ -67,6 +68,26 @@ router.post('/student/signin', async (req, res) => {
 
         res.status(400).send()
 
+    }
+})
+
+router.delete('/student', auth, async (req, res) => {
+
+    try {
+
+        // extract the student id passed by the auth middleware
+        const studentID = res.locals.id
+
+        await deleteAccount(studentID)
+
+        res.status(200).send()
+
+    } catch (e) {
+
+        // for any error
+        console.log(e)
+
+        res.status(400).send()
     }
 })
 
