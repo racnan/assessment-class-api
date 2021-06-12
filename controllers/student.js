@@ -1,5 +1,6 @@
 const express = require('express')
 
+// import necessary functions from ./services/student
 const {
     createStudent,
     signInStudent,
@@ -13,6 +14,23 @@ const auth = require('../middleware/auth')
 
 const router = new express.Router()
 
+// STUDENT SIGNUP ROUTER
+// POST /student/signup
+// REQUEST
+    /* example,
+        {
+            firstname: "Rachit",
+            lastname: "Naithani",
+            email: "rachitnaithani@gmail.com",
+            password: "rachit123"
+        }
+    */
+// RESPONSE
+    /* 
+        201 - account created
+        409 - email already exists
+        400 - error
+    */
 router.post('/student/signup', async (req, res) => {
 
     try {
@@ -44,6 +62,22 @@ router.post('/student/signup', async (req, res) => {
     }
 })
 
+
+// STUDENT SIGNIN ROUTER
+// POST /student/signin
+// REQUEST
+    /* example,
+        {
+            email: "rachitnaithani@gmail.com",
+            password: "rachit123"
+        }
+    */
+// RESPONSE
+    /* 
+        200 - accepted
+        401 - emailID and password doesn't match
+        400 - error
+    */
 router.post('/student/signin', async (req, res) => {
 
     try {
@@ -71,6 +105,13 @@ router.post('/student/signin', async (req, res) => {
     }
 })
 
+// STUDENT DELETE ACCOUNT ROUTER
+// DELETE /student
+// RESPONSE
+    /* 
+        200 - account deleted
+        400 - error
+    */
 router.delete('/student', auth, async (req, res) => {
 
     try {
@@ -91,6 +132,13 @@ router.delete('/student', auth, async (req, res) => {
     }
 })
 
+// STUDENT ENROLL IN CLASS ROUTER
+// POST /student/enroll/:classid
+// RESPONSE
+    /* 
+        201 - enrollment successfull
+        400 - error
+    */
 router.post('/student/enroll/:classid', auth, async (req, res) => {
 
     try {
@@ -117,6 +165,27 @@ router.post('/student/enroll/:classid', auth, async (req, res) => {
 
 })
 
+// STUDENT GET ALL CLASSES ROUTER
+// GET /student/classes
+// RESPONSE
+    /* 
+        200 - account deleted
+            {
+                [
+                    {
+                        subject_name: "maths101",
+                        fist_name: "Rachit", --teacher's name
+                        last_name: "Naithani"
+                    },
+                    {
+                        subject_name: "chemistry101",
+                        fist_name: "Rachit",
+                        last_name: "Naithani"
+                    }
+                ]
+            }
+        400 - error
+    */
 router.get("/student/classes", auth, async (req, res) => {
 
     try {
@@ -140,6 +209,14 @@ router.get("/student/classes", auth, async (req, res) => {
 
 })
 
+// STUDENT LEAVE CLASS ROUTER
+// DELETE /student/:classid
+// RESPONSE
+    /* 
+        200 - class left successfully
+        406 - no such class found
+        400 - error
+    */
 router.delete("/student/:classid", auth, async (req, res) => {
 
     try {

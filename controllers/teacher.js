@@ -15,6 +15,23 @@ const auth = require('../middleware/auth')
 
 const router = new express.Router()
 
+// TEACHER SIGNUP ROUTER
+// POST /teacher/signup
+// REQUEST
+    /* example,
+        {
+            firstname: "Rachit",
+            lastname: "Naithani",
+            email: "rachitnaithani@gmail.com",
+            password: "rachit123"
+        }
+    */
+// RESPONSE
+    /* 
+        201 - account created
+        409 - email already exists
+        400 - error
+    */
 router.post('/teacher/signup', async (req, res) => {
 
     try {
@@ -46,6 +63,21 @@ router.post('/teacher/signup', async (req, res) => {
     }
 })
 
+// TEACHER SIGNIN ROUTER
+// POST /teacher/signin
+// REQUEST
+    /* example,
+        {
+            email: "rachitnaithani@gmail.com",
+            password: "rachit123"
+        }
+    */
+// RESPONSE
+    /* 
+        200 - accepted
+        401 - emailID and password doesn't match
+        400 - error
+    */
 router.post('/teacher/signin', async (req, res) => {
 
     try {
@@ -73,6 +105,13 @@ router.post('/teacher/signin', async (req, res) => {
     }
 })
 
+// TEACHER DELETE ACCOUNT ROUTER
+// DELETE /teacher
+// RESPONSE
+    /* 
+        200 - account deleted
+        400 - error
+    */
 router.delete('/teacher', auth, async (req, res) => {
 
     try {
@@ -93,6 +132,19 @@ router.delete('/teacher', auth, async (req, res) => {
     }
 })
 
+// TEACHER CREATE CLASS ROUTER
+// POST /teacher/create
+// REQUEST
+    /* example,
+        {
+            subject: "Maths101"
+        }
+    */
+// RESPONSE
+    /* 
+        201 - class created
+        400 - error
+    */
 router.post('/teacher/create', auth, async (req, res) => {
 
     try {
@@ -113,6 +165,14 @@ router.post('/teacher/create', auth, async (req, res) => {
     }
 })
 
+// TEACHER DELETE CLASS ROUTER
+// DELETE /teacher/:classid
+// RESPONSE
+    /* 
+        200 - accepted
+        406 - no such class associated with teacher
+        400 - error
+    */
 router.delete('/teacher/:classid', auth, async (req, res) => {
 
     try {
@@ -143,6 +203,14 @@ router.delete('/teacher/:classid', auth, async (req, res) => {
 
 })
 
+// TEACHER ADD STUDENT TO CLASS ROUTER
+// POST /teacher/:classid/:studentid
+// RESPONSE
+    /* 
+        200 - student added
+        406 - no such class associated with the teacher
+        400 - error
+    */
 router.post('/teacher/:classid/:studentid', auth, async (req, res) => {
 
     try {
@@ -173,6 +241,14 @@ router.post('/teacher/:classid/:studentid', auth, async (req, res) => {
     }
 })
 
+// TEACHER REMOVE STUDENT FROM CLASS ROUTER
+// DELETE /teacher/:classid/:studentid
+// RESPONSE
+    /* 
+        200 - student removed
+        406 - no such class associated with the teacher
+        400 - error
+    */
 router.delete('/teacher/:classid/:studentid', auth, async (req, res) => {
 
     try {
@@ -206,6 +282,26 @@ router.delete('/teacher/:classid/:studentid', auth, async (req, res) => {
     }
 })
 
+// TEACHER GET ALL STUDENTS FROM CLASS ROUTER
+// GET /teacher/:classid
+// RESPONSE
+    /* 
+        200 - accepted
+            {
+                [
+                    {
+                        "first_name": "Rachit", -- students name
+                        "last_name": "Naithani",
+                    },
+                    {
+                        "first_name": "Home",
+                        "last_name": "Jam"
+                    }
+                ]
+            }
+        406 - no such class associated with user
+        400 - error
+    */
 router.get("/teacher/:classid", auth, async (req, res) => {
 
     try {

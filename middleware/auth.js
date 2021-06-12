@@ -4,7 +4,7 @@ const auth = (req, res, next) => {
 
     try {
 
-        // 'role' will get the value 'teacher' or 'student'
+        // Constant 'role' will get the value 'teacher' or 'student' from the route
         // this will be compared with 'role' in token of the user.
         // If they don't match, request is responded with a 401.
         // This prevents students to access teacher's resources and 
@@ -18,7 +18,7 @@ const auth = (req, res, next) => {
         if (decoded.role === role) {
             // if the role matches
 
-            // pass the id from the JWT
+            // pass the id from the JWT to the router
             res.locals.id = decoded.id
             return next()
 
